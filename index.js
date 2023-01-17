@@ -44,7 +44,7 @@ function debugBox() {
     new THREE.BoxGeometry(50, 50, 50),
     new THREE.MeshBasicMaterial({color:"#ff0000"}));
 
-  box.position.set(0, 50, 0);
+  box.position.set(0, 0, 0);
   box.castShadow = true;
 
   scene.add(box);
@@ -65,23 +65,26 @@ function createLight() {
 function createLight1() {
   let light = new THREE.SpotLight("#ffffff", 1, 300);
   light.position.set(-100, 0, 100);
-  light.lookAt(0,50,0);
   light.castShadow = true;
+  
+  light.target.position.set(0,50,0);
+  light.target.updateMatrixWorld();
 
   scene.add(light);
 }
 function createLight2() {
   let light = new THREE.SpotLight("#ffffff", 1, 300);
   light.position.set(-100, 0, -100);
-  light.lookAt(0,50,0);
   light.castShadow = true;
+
+  light.target.position.set(0,50,0);
+  light.target.updateMatrixWorld();
 
   scene.add(light);
 }
 function createLight3() {
   let light = new THREE.SpotLight("#ffffff", 0.5, 300, Math.PI/4 + Math.PI/6);
   light.position.set(0, 200, 0);
-  light.lookAt(0,0,0);
   light.castShadow = true;
 
   scene.add(light);
@@ -121,7 +124,7 @@ function init() {
  // control = new OrbitControls(currentCamera, renderer.domElement);
 
   initLight();
-  //debugBox();
+  debugBox();
   skyBox();
 }
 
