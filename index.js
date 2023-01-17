@@ -3,15 +3,41 @@ import { OrbitControls } from "./three.js/examples/jsm/controls/OrbitControls.js
 
 let scene, camera1, camera2, renderer, control, currentCamera, anim;
 
-// function skyBox(){
-//   let box = new THREE.BoxGeometry(1000,1000,1000);
-//   let loader = new THREE.TextureLoader()
-//   let boxMat = [
-//     new THREE.MeshBasicMaterial({
-//       map : loader.load('./assets/skybox/dawn_back.png')
-//     })
-//   ]
-// }
+function skyBox(){
+  let boxGeo = new THREE.BoxGeometry(1000,1000,1000);
+  let loader = new THREE.TextureLoader();
+
+  let right = loader.load('./assets/skybox/dawn_right.png');
+  let left = loader.load('./assets/skybox/dawn_left.png');
+  let top = loader.load('./assets/skybox/dawn_top.png');
+  let bottom = loader.load('./assets/skybox/dawn_bottom.png');
+  let front = loader.load('./assets/skybox/dawn_front.png');
+  let back = loader.load('./assets/skybox/dawn_back.png');
+
+  let boxMat = [
+    new THREE.MeshBasicMaterial({
+      map : right, side: THREE.BackSide
+    }),
+    new THREE.MeshBasicMaterial({
+      map : left, side: THREE.BackSide
+    }),
+    new THREE.MeshBasicMaterial({
+      map : top, side: THREE.BackSide
+    }),
+    new THREE.MeshBasicMaterial({
+      map : bottom, side: THREE.BackSide
+    }),
+    new THREE.MeshBasicMaterial({
+      map : front, side: THREE.BackSide
+    }),
+    new THREE.MeshBasicMaterial({
+      map : back, side: THREE.BackSide
+    })
+  ]
+
+  let boxMesh = new THREE.Mesh(boxGeo, boxMat);
+  scene.add(boxMesh);
+}
 
 function debugBox() {
   let box = new THREE.Mesh(
@@ -96,12 +122,13 @@ function init() {
 
   initLight();
   //debugBox();
+  skyBox();
 }
 
 function render() {
-  anim = requestAnimationFrame(render);
   //control.update();
   renderer.render(scene, currentCamera);
+  anim = requestAnimationFrame(render);
 }
 
 window.onload = function () {
