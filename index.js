@@ -1,7 +1,10 @@
 import * as THREE from "./three.js/build/three.module.js";
 import { OrbitControls } from "./three.js/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "./three.js/examples/jsm/loaders/GLTFLoader.js";
+import { FontLoader } from './three.js/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from './three.js/examples/jsm/geometries/TextGeometry.js';
 
-let scene, camera1, camera2, renderer, control, currentCamera, anim;
+let scene, camera1, camera2, renderer, control, currentCamera, anim = true, buttonMesh, textureLoader, mouse, pole1mesh, pole2mesh, model;
 
 function skyBox(){
   let boxGeo = new THREE.BoxGeometry(1000,1000,1000);
@@ -49,6 +52,243 @@ function debugBox() {
 
   scene.add(box);
 }
+
+function createGround() {
+  let geometry = new THREE.PlaneGeometry(1000,1000)
+  let material = new THREE.MeshStandardMaterial({side: THREE.DoubleSide, color: "#8c3b0c"})
+  let mesh = new THREE.Mesh(geometry, material)
+
+  mesh.rotation.x = Math.PI/2
+  mesh.position.set(0, -5, 0);
+  mesh.castShadow = true;
+
+
+  scene.add(mesh);
+}
+
+
+function render3DModel() {
+  let loader = new GLTFLoader()
+  loader.load('./assets/model/scene.gltf', function(gltf){
+    model = gltf.scene
+    model.scale.set(0.1,0.1,0.1)
+    model.receiveShadow = true
+    model.castShadow = true
+    scene.add(model)
+    
+    return model
+  })
+}
+
+function crate1() {
+  let geometry = new THREE.BoxGeometry(10,10,10)
+  let material = new THREE.MeshPhongMaterial({map: textureLoader.load("./assets/texture/crate1.jpeg")})
+  let mesh = new THREE.Mesh(geometry, material)
+
+  mesh.position.set(-30,0,-40)
+  mesh.rotation.y = Math.PI/1
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function crate2() {
+  let geometry = new THREE.BoxGeometry(5,5,5)
+  let material = new THREE.MeshPhongMaterial({map: textureLoader.load("./assets/texture/crate1.jpeg")})
+  let mesh = new THREE.Mesh(geometry, material)
+
+  mesh.position.set(-30,-2,-48)
+  mesh.rotation.x = Math.PI/6
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function crate3() {
+  let geometry = new THREE.BoxGeometry(10,15,10)
+  let material = new THREE.MeshPhongMaterial({map: textureLoader.load("./assets/texture/crate1.jpeg")})
+  let mesh = new THREE.Mesh(geometry, material)
+
+  mesh.position.set(-40,2.5,30)
+  mesh.rotation.y = -Math.PI/4
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function crate4() {
+  let geometry = new THREE.BoxGeometry(20,20,20)
+  let material = new THREE.MeshPhongMaterial({map: textureLoader.load("./assets/texture/crate2.jpeg")})
+  let mesh = new THREE.Mesh(geometry, material)
+
+  mesh.position.set(30,5,40)
+  mesh.rotation.y = Math.PI/3
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function crate5() {
+  let geometry = new THREE.BoxGeometry(40,15,30)
+  let material = new THREE.MeshPhongMaterial({map: textureLoader.load("./assets/texture/crate2.jpeg")})
+  let mesh = new THREE.Mesh(geometry, material)
+
+  mesh.position.set(30,2.5,-60)
+  mesh.rotation.y = -Math.PI/6
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function createTires1() {
+  let geometry = new THREE.TorusGeometry(5,2.5,16,100)
+  let material = new THREE.MeshStandardMaterial({color: "#3e444c"})
+  let mesh = new THREE.Mesh(geometry,material)
+
+  mesh.position.set(-70,-5,0)
+  mesh.rotation.y = Math.PI/2
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function createTires2() {
+  let geometry = new THREE.TorusGeometry(5,2.5,16,100)
+  let material = new THREE.MeshStandardMaterial({color: "#3e444c"})
+  let mesh = new THREE.Mesh(geometry,material)
+
+  mesh.position.set(-65,-5,20)
+  mesh.rotation.y = (Math.PI/2) + (Math.PI/9 * 1)
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function createTires3() {
+  let geometry = new THREE.TorusGeometry(5,2.5,16,100)
+  let material = new THREE.MeshStandardMaterial({color: "#3e444c"})
+  let mesh = new THREE.Mesh(geometry,material)
+
+  mesh.position.set(-65,-5,-20)
+  mesh.rotation.y = -((Math.PI/2) + (Math.PI/9 * 1))
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function createTires4() {
+  let geometry = new THREE.TorusGeometry(5,2.5,16,100)
+  let material = new THREE.MeshStandardMaterial({color: "#3e444c"})
+  let mesh = new THREE.Mesh(geometry,material)
+
+  mesh.position.set(-55,-5,40)
+  mesh.rotation.y = (Math.PI/2) + (Math.PI/9 * 2)
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function createTires5() {
+  let geometry = new THREE.TorusGeometry(5,2.5,16,100)
+  let material = new THREE.MeshStandardMaterial({color: "#3e444c"})
+  let mesh = new THREE.Mesh(geometry,material)
+
+  mesh.position.set(-55,-5,-40)
+  mesh.rotation.y = -((Math.PI/2) + (Math.PI/9 * 2))
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+}
+
+function createPole1() {
+  let geometry = new THREE.CylinderGeometry(1,1,50,16)
+  let material = new THREE.MeshPhongMaterial({color: "#646FD4"})
+  pole1mesh = new THREE.Mesh(geometry,material)
+
+  pole1mesh.position.set(0,15,35)
+  pole1mesh.rotation.x = -Math.PI/6
+  pole1mesh.castShadow = true
+  pole1mesh.receiveShadow = true
+
+  scene.add(pole1mesh)
+  return pole1mesh
+}
+
+function createPole2() {
+  let geometry = new THREE.CylinderGeometry(1,1,50,16)
+  let material = new THREE.MeshPhongMaterial({color: "#646FD4"})
+  pole2mesh = new THREE.Mesh(geometry,material)
+
+  pole2mesh.position.set(0,15,-35)
+  pole2mesh.rotation.x = Math.PI/6
+  pole2mesh.castShadow = true
+  pole2mesh.receiveShadow = true
+
+  scene.add(pole2mesh)
+  return pole2mesh
+}
+
+function createButtonBox() {
+  let geometry = new THREE.BoxGeometry(10,16.5,14.5)
+  let material = new THREE.MeshPhongMaterial({color: "#848482"})
+  let mesh = new THREE.Mesh(geometry,material)
+
+  mesh.position.set(-43,3,65)
+  mesh.rotation.y = -Math.PI/6
+  mesh.castShadow = true
+  mesh.receiveShadow = true
+
+  scene.add(mesh)
+
+}
+
+function createButtonSphere() {
+  let geometry = new THREE.SphereGeometry(4.5,32,16)
+  let material = new THREE.MeshPhongMaterial({color: "#dc143c"})
+  buttonMesh = new THREE.Mesh(geometry,material)
+
+  buttonMesh.position.set(-46,3,63)
+  buttonMesh.castShadow = true
+  buttonMesh.receiveShadow = true
+
+  scene.add(buttonMesh)
+  return buttonMesh
+}
+
+function addListener() {
+  document.addEventListener("click", mouseListener)
+}
+
+function createFont() {
+  let loader = new FontLoader()
+  loader.load('./three.js/examples/fonts/helvetiker_bold.typeface.json', function(font1){
+    let geometry = new TextGeometry("Click Me!",{
+      font:font1,
+      color: "#990000",
+      size:7,
+      height:2
+    })
+    let material = new THREE.MeshPhongMaterial({color: "#FF5B00"})
+    let mesh = new THREE.Mesh(geometry,material)
+    mesh.position.set(-35,30,50)
+    mesh.rotation.y = Math.PI * 3 + 1
+    mesh.castShadow = true
+    mesh.receiveShadow = true
+
+    scene.add(mesh)
+  })
+}
+
 
 //lighting 1(ambient), 2,3,4 (spotlight)
 function initLight(){
@@ -121,23 +361,102 @@ function init() {
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
   document.body.appendChild(renderer.domElement);
- // control = new OrbitControls(currentCamera, renderer.domElement);
+  textureLoader = new THREE.TextureLoader()
+  control = new OrbitControls(currentCamera, renderer.domElement);
 
   initLight();
-  debugBox();
+  // debugBox();
   skyBox();
+  createGround();
+  render3DModel();
+  crate1();
+  crate2();
+  crate3();
+  crate4();
+  crate5();
+  createTires1();
+  createTires2();
+  createTires3();
+  createTires4();
+  createTires5();
+  createPole1();
+  createPole2();
+  createButtonBox();
+  createButtonSphere();
+  addListener();
+  createFont();
 }
 
+let flag = false
+let greenButton = false;
+let greenButton1 = false;
+let rotate = true;
 function render() {
-  //control.update();
   renderer.render(scene, currentCamera);
-  anim = requestAnimationFrame(render);
+  requestAnimationFrame(render);
+
+  // control.update();
+  if(anim){
+    if(button1 && pole1mesh.rotation.x < 0){
+      pole1mesh.rotation.x += 0.001;
+      pole2mesh.rotation.x -= 0.001;
+      if (pole1mesh.rotation.x > 0){
+        flag =false;
+        greenButton = true;
+      }
+    }
+    if (greenButton1) {
+      model.position.y += 0.1
+  
+      if (rotate){
+        model.rotation.x += 0.001
+        if (model.rotation.x > 0.3){
+          rotate = false;
+        }
+      }
+      else{
+        model.rotation.x -= 0.001
+        if (model.rotation.x < -0.3){
+          rotate = true;
+        }
+      }
+    }
+  }
 }
+
+let button1 = false
+
+function mouseListener() {
+  flag = true
+  const raycaster = new THREE.Raycaster()
+  raycaster.setFromCamera(mouse,currentCamera)
+
+  // rubah jadi cuma buttonnya yang bisa di klik
+
+  var intersects = raycaster.intersectObject(buttonMesh)
+  // const intersects = raycaster.intersectObjects(buttonMesh)
+  if (intersects.length > 0) {
+    flag = true
+  }
+  
+  if (flag){
+    intersects[0].object.material.color.set("#fada5e")
+    button1 = true
+  }
+  
+
+  if (greenButton) {
+    intersects[0].object.material.color.set("#32dc32")
+    greenButton1 = true;
+  }
+  
+}
+
 
 window.onload = function () {
   init();
   render();
-  addEventListener();
+  addEventListener("assets/model/scene.gltf");
 };
 
 window.onresize = function (){
@@ -145,6 +464,13 @@ window.onresize = function (){
   currentCamera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+window.onmousemove = function(event) {
+  mouse = new THREE.Vector2()
+
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+  mouse.y = -((event.clientY / window.innerHeight) * 2 - 1)
 }
 
 function addEventListener() {
@@ -157,12 +483,17 @@ function keyboardListener(e) {
   if(keyCode == 32) {
     if (currentCamera == camera1) {
       currentCamera = camera2;
-      control = new OrbitControls(currentCamera, renderer.domElement);
+
 
       //this thing work?
       // cancelAnimationFrame(anim);
+      anim = false;
+
+      control = new OrbitControls(currentCamera, renderer.domElement);
     } else {
       currentCamera = camera1;
+      anim = true;
     }
   }
 }
+
