@@ -362,7 +362,7 @@ function init() {
 
   document.body.appendChild(renderer.domElement);
   textureLoader = new THREE.TextureLoader()
-  control = new OrbitControls(currentCamera, renderer.domElement);
+  control = new OrbitControls(camera2, renderer.domElement);
 
   initLight();
   // debugBox();
@@ -488,8 +488,6 @@ function keyboardListener(e) {
       //this thing work?
       // cancelAnimationFrame(anim);
       anim = false;
-
-      control = new OrbitControls(currentCamera, renderer.domElement);
     } else {
       currentCamera = camera1;
       anim = true;
