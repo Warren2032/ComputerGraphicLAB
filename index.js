@@ -42,20 +42,15 @@ function skyBox(){
   scene.add(boxMesh);
 }
 
-function debugBox() {
-  let box = new THREE.Mesh(
-    new THREE.BoxGeometry(50, 50, 50),
-    new THREE.MeshBasicMaterial({color:"#ff0000"}));
-
-  box.position.set(0, 0, 0);
-  box.castShadow = true;
-
-  scene.add(box);
-}
-
 function createGround() {
+
+  const texture = new THREE.TextureLoader().load( "./assets/texture/e.jpg" );
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 50, 50 );
+
   let geometry = new THREE.PlaneGeometry(1000,1000)
-  let material = new THREE.MeshStandardMaterial({side: THREE.DoubleSide, color: "#8c3b0c"})
+  let material = new THREE.MeshStandardMaterial({side: THREE.DoubleSide, color: "#ffffff", map: texture})
   let mesh = new THREE.Mesh(geometry, material)
 
   mesh.rotation.x = Math.PI/2
@@ -65,7 +60,6 @@ function createGround() {
 
   scene.add(mesh);
 }
-
 
 function render3DModel() {
   let loader = new GLTFLoader()
@@ -365,7 +359,6 @@ function init() {
   control = new OrbitControls(camera2, renderer.domElement);
 
   initLight();
-  // debugBox();
   skyBox();
   createGround();
   render3DModel();
@@ -484,9 +477,6 @@ function keyboardListener(e) {
     if (currentCamera == camera1) {
       currentCamera = camera2;
 
-
-      //this thing work?
-      // cancelAnimationFrame(anim);
       anim = false;
     } else {
       currentCamera = camera1;
