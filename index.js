@@ -1,5 +1,6 @@
 import * as THREE from "./three.js/build/three.module.js";
 import { OrbitControls } from "./three.js/examples/jsm/controls/OrbitControls.js";
+import { Water } from "./three.js/examples/jsm/objects/Water.js";
 import { GLTFLoader } from "./three.js/examples/jsm/loaders/GLTFLoader.js";
 import { FontLoader } from './three.js/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from './three.js/examples/jsm/geometries/TextGeometry.js';
@@ -42,19 +43,48 @@ function skyBox(){
   scene.add(boxMesh);
 }
 
+let water
+function createWater(){
+  const waterGeometry = new THREE.PlaneGeometry( 1000, 1000 );
+
+  water = new Water(
+    waterGeometry,
+    {
+      textureWidth: 512,
+      textureHeight: 512,
+      waterNormals: new THREE.TextureLoader().load( "./assets/texture/water.jpg", function ( texture ) {
+
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+      } ),
+      sunDirection: new THREE.Vector3(),
+      sunColor: 0xffffff,
+      waterColor: 0x001e0f,
+      distortionScale: 3.7,
+      fog: scene.fog !== undefined
+    }
+  );
+
+  water.rotation.x = - Math.PI / 2;
+
+  water.position.set(0, -10, 0);
+
+  scene.add( water );
+}
+
 function createGround() {
 
   const texture = new THREE.TextureLoader().load( "./assets/texture/e.jpg" );
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( 50, 50 );
+  texture.repeat.set( 5, 5  );
 
-  let geometry = new THREE.PlaneGeometry(1000,1000)
+  let geometry = new THREE.BoxGeometry(200,200,500 )
   let material = new THREE.MeshStandardMaterial({side: THREE.DoubleSide, color: "#ffffff", map: texture})
   let mesh = new THREE.Mesh(geometry, material)
 
   mesh.rotation.x = Math.PI/2
-  mesh.position.set(0, -5, 0);
+  mesh.position.set(0, -255, 0);
   mesh.castShadow = true;
 
 
@@ -378,6 +408,7 @@ function init() {
   createButtonSphere();
   addListener();
   createFont();
+  createWater();
 }
 
 let flag = false
@@ -387,6 +418,9 @@ let rotate = true;
 function render() {
   renderer.render(scene, currentCamera);
   requestAnimationFrame(render);
+  
+  const time = performance.now() * 0.001;
+  water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
   // control.update();
   if(anim){
